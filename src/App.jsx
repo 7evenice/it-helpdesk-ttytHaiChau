@@ -81,7 +81,7 @@
         problem: formData.get('problemName').trim(),
       };
 
-      console.log('JSON.stringify(dataToSubmit)', JSON.stringify(dataToSubmit));
+      // console.log('JSON.stringify(dataToSubmit)', JSON.stringify(dataToSubmit));
 
       try {
         await fetch(import.meta.env.VITE_GOOGLE_APP_SCRIPT_URL, {
