@@ -2,7 +2,8 @@
   import { Label, Textarea } from 'flowbite-react';
   import logo from './assets/logo_2026_R.png';
   import bgImage from './assets/da-nang-cach-ly-them-mot-trung-tam-y-te-ff2-5136635.jpg';
-  import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
+  import Swal from 'sweetalert2';
   function App() {
     const textareaRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -81,8 +82,6 @@
         problem: formData.get('problemName').trim(),
       };
 
-      // console.log('JSON.stringify(dataToSubmit)', JSON.stringify(dataToSubmit));
-
       try {
         await fetch(import.meta.env.VITE_GOOGLE_APP_SCRIPT_URL, {
           method: 'POST',
@@ -93,11 +92,18 @@
           body: JSON.stringify(dataToSubmit),
         });
 
-        // alert(`Đã gửi yêu cầu hỗ trợ thành công lúc ${timeStamp}!`);
+        // HIỆN THÔNG BÁO THÀNH CÔNG VỚI TÔNG MÀU TÍM
+        Swal.fire({
+          title: 'Thành công!',
+          text: `Đã gửi yêu cầu hỗ trợ lúc ${timeStamp}. Tổ IT sẽ tiếp nhận ngay!`,
+          icon: 'success',
+          iconColor: '#c084fc', // Đổi icon thành màu tím
+          confirmButtonText: 'Đóng',
+          confirmButtonColor: '#c084fc', // Đổi nút bấm thành màu tím
+        });
 
-
+        // Làm sạch form sau khi gửi
         formElement.reset();
-
         setSearchTerm('');
 
         if (textareaRef.current) {
@@ -105,9 +111,17 @@
         }
       } catch (error) {
         console.error('Lỗi kết nối mạng:', error);
-        // alert('Không thể gửi dữ liệu. Vui lòng kiểm tra lại đường truyền mạng!');
+
+        // HIỆN THÔNG BÁO LỖI BẰNG MÀU ĐỎ ĐỂ DỄ NHẬN DIỆN
+        Swal.fire({
+          title: 'Lỗi mạng!',
+          text: 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại wifi/mạng LAN!',
+          icon: 'error',
+          confirmButtonText: 'Đã hiểu',
+          confirmButtonColor: '#d33', // Giữ màu đỏ cho thông báo lỗi
+        });
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Tắt hiệu ứng chờ
       }
     };
     return (
